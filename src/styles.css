@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    @apply m-0 h-full w-full overflow-hidden;
+  }
+  body {
+    @apply bg-[#101719] font-sans antialiased;
+  }
+}
+
+.maplibregl-ctrl-group {
+  @apply overflow-hidden rounded-md border border-white/15 bg-[#182126] shadow-lg;
+}
+.maplibregl-ctrl-group button {
+  @apply h-8 w-10;
+}
+.maplibregl-ctrl-group button + button {
+  @apply border-t border-white/10;
+}
+.maplibregl-ctrl-group button:hover {
+  @apply bg-slate-700;
+}
+.maplibregl-ctrl-group button:focus-visible {
+  @apply outline outline-2 -outline-offset-2 outline-teal-300;
+}
+.maplibregl-ctrl-icon {
+  filter: invert(0.85);
+}
+.maplibregl-map .maplibregl-ctrl-attrib {
+  @apply bg-slate-950/80 text-slate-300;
+}
+.maplibregl-ctrl-attrib a {
+  @apply text-slate-300;
+}
