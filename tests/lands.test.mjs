@@ -2,8 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { once } from "node:events";
-import { createLandsMiddleware, identifyUpstreamUrl } from "../server/lands.mjs";
-import { GET as identifyGet } from "../api/lands/identify.js";
+import { createLandsMiddleware, identifyResponse, identifyUpstreamUrl } from "../server/lands.mjs";
 
 test("identify route accepts the reported Kowloon point and rejects a bad one", async () => {
   assert.equal(identifyUpstreamUrl(0, 0), null);
@@ -22,7 +21,7 @@ test("identify route accepts the reported Kowloon point and rejects a bad one", 
     });
   };
   try {
-    const response = await identifyGet(
+    const response = await identifyResponse(
       new Request(
         "https://example.test/api/lands/identify?x=837664.169&y=820990.980",
       ),
@@ -30,7 +29,7 @@ test("identify route accepts the reported Kowloon point and rejects a bad one", 
     assert.equal(response.status, 200);
     assert.match(seen, /\/gs\/api\/v1\.0\.0\/identify\?/);
     assert.equal(await response.json().then((body) => Array.isArray(body.results)), true);
-    const rejected = await identifyGet(
+    const rejected = await identifyResponse(
       new Request("https://example.test/api/lands/identify?x=1&y=2"),
     );
     assert.equal(rejected.status, 400);
