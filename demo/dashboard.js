@@ -1,8 +1,8 @@
 const SVG = "http://www.w3.org/2000/svg";
 const COLORS = {
   low: { wall: "#2f6d62", roof: "#9fd4c6", side: "#24584f" },
-  medium: { wall: "#8d5e22", roof: "#e2b56b", side: "#6d4818" },
-  high: { wall: "#8f3d36", roof: "#e7a59c", side: "#6e2e29" },
+  medium: { wall: "#e6c200", roof: "#ffe14a", side: "#b89a00" },
+  high: { wall: "#c62828", roof: "#ff3b30", side: "#8e1c1c" },
 };
 
 const state = {

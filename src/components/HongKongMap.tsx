@@ -7,6 +7,7 @@ import {
 } from "maplibre-gl";
 import { applyDarkAppearance } from "../map/appearance";
 import { addBuildings } from "../map/buildings";
+import { addDemoRiskBuildings } from "../map/riskOverlay";
 import { initialCamera, mapConfig } from "../map/config";
 
 import { mountOfficialModels, type ModelMode } from "../map/officialModels";
@@ -135,6 +136,7 @@ export function HongKongMap() {
 
     map.on("style.load", () => {
       applyDarkAppearance(map);
+      addDemoRiskBuildings(map);
       if (!addBuildings(map)) {
         setMessage(
           "This map style has no configured building source. Check VITE_BUILDING_SOURCE in your environment.",
@@ -245,6 +247,20 @@ export function HongKongMap() {
             點選地圖上的建築或設施位置
           </p>
         )}
+        <div className="mt-3 border-t border-white/10 pt-3 text-xs text-slate-300">
+          <p className="mb-2 text-slate-400">Demo risk colours</p>
+          <p className="flex items-center gap-2">
+            <span className="inline-block h-2.5 w-2.5 bg-[#ffe14a]" />
+            Yellow · medium
+          </p>
+          <p className="mt-1 flex items-center gap-2">
+            <span className="inline-block h-2.5 w-2.5 bg-[#ff3b30]" />
+            Red · high
+          </p>
+          <p className="mt-2 max-w-64 text-[10px] leading-snug text-slate-500">
+            Proof of concept only. Sample blocks, not an official safety assessment.
+          </p>
+        </div>
       </section>
       {selection && (
         <IdentifyPanel

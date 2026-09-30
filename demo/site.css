@@ -9,10 +9,10 @@
   --brass: #c4a574;
   --low: #2f6d62;
   --low-roof: #9fd4c6;
-  --med: #8d5e22;
-  --med-roof: #e2b56b;
-  --high: #8f3d36;
-  --high-roof: #e7a59c;
+  --med: #e6c200;
+  --med-roof: #ffe14a;
+  --high: #c62828;
+  --high-roof: #ff3b30;
   --water: #143036;
   --land: #243239;
   --land-edge: #3d5158;
@@ -207,8 +207,8 @@ input, select {
 }
 
 .band.low { background: var(--low); color: #e7f7f2; }
-.band.medium { background: var(--med); color: #fff4e0; }
-.band.high { background: var(--high); color: #fff0ee; }
+.band.medium { background: var(--med-roof); color: #1a1400; }
+.band.high { background: var(--high-roof); color: #2a0907; }
 
 .count { margin: 0 0 8px; color: var(--faint); font-size: 12px; }
 
