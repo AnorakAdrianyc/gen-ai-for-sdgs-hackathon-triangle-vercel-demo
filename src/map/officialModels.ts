@@ -1,10 +1,10 @@
-import { AmbientLight, DirectionalLight, LightingEffect } from "@deck.gl/core";
+import { ArchitecturalScenegraphLayer } from "./ArchitecturalScenegraphLayer";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import { Tile3DLayer } from "@deck.gl/geo-layers";
 import { Tiles3DLoader } from "@loaders.gl/3d-tiles";
 import type { Map } from "maplibre-gl";
 
-export type ModelMode = "basic" | "spatial" | "visual";
+export type ModelMode = "basic" | "spatial";
 export function mountOfficialModels(
   map: Map,
   mode: ModelMode,
@@ -13,10 +13,7 @@ export function mountOfficialModels(
   let disposed = false;
   let hasContent = false;
   let failed = false;
-  const paths =
-    mode === "spatial"
-      ? ["3dsd/WGS84/building", "3dsd/WGS84/infrastructure"]
-      : ["3dtiles/f2"];
+  const paths = ["3dsd/WGS84/building", "3dsd/WGS84/infrastructure"];
   const setBasic = (visible: boolean) => {
     if (map.getLayer("hk-buildings-3d"))
       map.setLayoutProperty(
@@ -47,17 +44,7 @@ export function mountOfficialModels(
   };
   const overlay = new MapboxOverlay({
     interleaved: false,
-    effects: [
-      new LightingEffect({
-        ambient: new AmbientLight({ color: [255, 255, 255], intensity: 2 }),
-        sun: new DirectionalLight({
-          color: [255, 255, 255],
-          intensity: 3,
-          direction: [-1, -2, -3],
-        }),
-      }),
-    ],
-    useDevicePixels: Math.min(window.devicePixelRatio, 1.5),
+    useDevicePixels: Math.min(window.devicePixelRatio, 2),
     onError: error,
     layers: paths.map(
       (path) =>
@@ -84,13 +71,20 @@ export function mountOfficialModels(
             ),
             "3d-tiles": { loadGLTF: true },
             tileset: {
-              maximumScreenSpaceError: mode === "visual" ? 64 : 32,
-              maximumMemoryUsage: 96,
-              maxRequests: 2,
+              maximumScreenSpaceError: 2,
+              maximumMemoryUsage: 256,
+              memoryAdjustedScreenSpaceError: true,
+              maxRequests: 3,
               throttleRequests: true,
             },
           },
           pickable: false,
+          _subLayerProps: {
+            scenegraph: {
+              type: ArchitecturalScenegraphLayer,
+              _lighting: "flat",
+            },
+          },
 
           onTileLoad: (tile) => {
             if (!tile.content?.gltf && !tile.content?.positions) return;

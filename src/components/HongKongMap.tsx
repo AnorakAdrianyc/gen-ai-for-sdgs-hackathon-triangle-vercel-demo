@@ -215,7 +215,6 @@ export function HongKongMap() {
         >
           <option value="basic">基本建築 · OpenStreetMap</option>
           <option value="spatial">3D Spatial Data · 建築與基建</option>
-          <option value="visual">3D Visualisation Map · 實景模型</option>
         </select>
         <p role="status" className="mt-2 max-w-64 text-xs text-slate-400">
           {modelStatus}

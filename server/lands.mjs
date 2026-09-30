@@ -34,9 +34,7 @@ export function createLandsMiddleware(env) {
     } else if (url.pathname.startsWith("/api/lands/3d/")) {
       const path = url.pathname.slice("/api/lands/3d/".length);
       if (
-        !/^(3dsd\/WGS84\/(building|infrastructure)\/|3dtiles\/f2\/)/.test(
-          path,
-        ) ||
+        !/^3dsd\/WGS84\/(building|infrastructure)\//.test(path) ||
         /%2e|%2f|%5c|\\/i.test(path)
       ) {
         res.writeHead(400).end();

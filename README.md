@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. The default OpenStreetMap buildings and Identify work without a key. The two official 3D model modes require `LANDSD_API_KEY` in `.env.local`. Internet access is required for public vector tiles, styles, fonts and sprites; this is not an offline map. WebGL must be enabled.
+Open the local URL printed by Vite. The default OpenStreetMap buildings and Identify work without a key. The official 3D Spatial Data mode requires `LANDSD_API_KEY` in `.env.local`. Internet access is required for public vector tiles, styles, fonts and sprites; this is not an offline map. WebGL must be enabled.
 
 ```sh
 npm run build    # TypeScript check and production build
@@ -67,7 +67,6 @@ Keep the map's built-in attribution visible. Map data and tile service terms app
 ## 官方 3D 模型與 Identify
 
 - **3D Spatial Data**：載入地政總署的建築與基建 3D Tiles，保留原始模型幾何和高度。
-- **3D Visualisation Map**：載入地政總署實景 3D Tiles，與基本建築／Spatial 模式互相切換。
 - **Identify**：開啟後點選地圖，將 WGS84 轉為 HK80，查詢該地理位置的建築、地址與設施。這不是模型物件 ID 查詢；點選屋頂時的地面位置可能與建築位置不同。
 - 支援載入、空結果、錯誤、重試、關閉查詢，以及切換模型後資源清理。
 
@@ -81,15 +80,15 @@ Key 僅由 `server/lands.mjs` 加入官方請求，不會編入前端或傳給�
 | -------- | ----------------------------------------------------------------------------- |
 | 建築     | `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/building/tileset.json`        |
 | 基建     | `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/infrastructure/tileset.json`  |
-| 實景     | `https://data.map.gov.hk/api/3d-data/3dtiles/f2/tileset.json`                 |
 | Identify | `https://www.map.gov.hk/gs/api/v1.0.0/identify?x={HK80_X}&y={HK80_Y}&lang=zh` |
 
-3D 模型使用 deck.gl 在 MapLibre 上疊加顯示。為控制記憶體和下載量，預設仍為基本建築，官方模式按視野逐步載入，採保守細節與並行請求設定；首次載入可需數十秒。模型涵蓋範圍、更新時間、精度與材質依官方來源。實景模式包含自己的地表，可能遮住底圖道路及標籤。
+3D 模型使用 deck.gl 在 MapLibre 上疊加顯示。為控制記憶體和下載量，預設仍為基本建築，官方模式按視野逐步載入，採 2 px 畫面誤差門檻、每組模型 256 MB 快取預算與最多 3 個並行請求；首次載入可需數十秒。模型涵蓋範圍、更新時間與幾何精度依官方來源。記憶體壓力升高時可降低細節，以免無限制載入。建築改用淺藍灰建築示意材質，以實際面的法線計算方向光，強化牆面、屋頂與轉角的對比；不更改模型幾何和高度。遠處仍會使用簡化模型，原始資料中的形狀誤差不會因此自動修復。實景模式已移除。
 
 Basis 材質解碼器在 `predev`／`prebuild` 由已安裝的 npm 套件複製到 `public/codecs/`，隨站點提供，無需瀏覽器向第三方 CDN 下載解碼器。
 
 ### 新增模組與驗證
 
+- `src/map/ArchitecturalScenegraphLayer.ts`：逐面明暗與統一建築材質。
 - `src/map/officialModels.ts`：官方 3D Tiles、載入狀態、資源管理。
 - `src/services/identify.ts`：座標轉換、可取消的查詢和回傳解析。
 - `src/components/IdentifyPanel.tsx`：繁體中文結果面板。
@@ -99,4 +98,4 @@ Basis 材質解碼器在 `predev`／`prebuild` 由已安裝的 npm 套件複製�
 
 完整擴充資料來源清單見 [香港地圖 API 清單](docs/HONG_KONG_APIS.zh-Hant.md)。
 
-官方說明：[3D Spatial Data](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-spatial-data-api)、[3D Visualisation Map](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-visualisation-map-api)、[Identify](https://portal.csdi.gov.hk/csdi-webpage/apidoc/IdentifyAPI)。
+官方說明：[3D Spatial Data](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-spatial-data-api)、[Identify](https://portal.csdi.gov.hk/csdi-webpage/apidoc/IdentifyAPI)。

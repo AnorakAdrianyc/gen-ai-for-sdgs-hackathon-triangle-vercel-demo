@@ -18,8 +18,9 @@ test("proxy rejects invalid coordinates, unlisted paths, writes and missing keys
       ["/api/lands/identify?x=NaN&y=817198", 400, "GET"],
       ["/api/lands/identify?x=0&y=817198", 400, "GET"],
       ["/api/lands/3d/unknown/tileset.json", 400, "GET"],
-      ["/api/lands/3d/3dtiles/f2/%2fsecret", 400, "GET"],
-      ["/api/lands/3d/3dtiles/f2/tileset.json", 503, "GET"],
+      ["/api/lands/3d/3dtiles/f2/tileset.json", 400, "GET"],
+      ["/api/lands/3d/3dsd/WGS84/building/%2fsecret", 400, "GET"],
+      ["/api/lands/3d/3dsd/WGS84/building/tileset.json", 503, "GET"],
       ["/api/lands/identify?x=835665&y=817198", 405, "POST"],
     ]) {
       const response = await fetch(base + path, { method });
