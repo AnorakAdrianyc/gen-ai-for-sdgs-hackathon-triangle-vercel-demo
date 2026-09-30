@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10161b" />
+    <meta
+      name="description"
+      content="Interactive infographic: a multi-stakeholder authentication and dispatch network for Hong Kong building repairs, shaped like a ride."
+    />
+    <title>Stakeholder network · Building Safety Desk</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%238f3d36' width='16' height='16'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body data-page="network">
+    <a class="skip" href="#network">Skip to network diagram</a>
+    <header class="top">
+      <div>
+        <p class="mark">Static demo · no API</p>
+        <h1>Who is allowed to speak for a building</h1>
+      </div>
+      <nav class="nav" aria-label="Demo">
+        <a href="./index.html">Risk map</a>
+        <a href="./infographic.html" aria-current="page">Stakeholder network</a>
+        <a href="./workflow-flow.html">Repair workflow</a>
+      </nav>
+    </header>
+    <main class="page">
+      <p class="lede" style="padding-left: 0">
+        Owners’ corporations and small managers stall because compliance,
+        tendering, and the legal steps sit in inboxes and group chats. The
+        repair never starts. The network below is the same shape as a ride:
+        a person asks, a verified provider is matched, and one record carries
+        the status. Authentication is what keeps a resident, a contractor, and
+        an authority desk from seeing the same file.
+      </p>
+      <section class="analogy" aria-label="How a ride maps onto a building case">
+        <article>
+          <p class="kicker">Ask</p>
+          <h2>A resident opens a case</h2>
+          <p>Like requesting a car, but the pickup is a defect in one building. The account is bound to a flat, not to the whole city.</p>
+        </article>
+        <article>
+          <p class="kicker">Verified supply</p>
+          <h2>A licence is the driver’s permit</h2>
+          <p>Contractors and inspectors join only with a registration that is still valid. The owners’ corporation is the account holder who confirms the job.</p>
+        </article>
+        <article>
+          <p class="kicker">Shared record</p>
+          <h2>The case is the trip</h2>
+          <p>Quotes, photos, and sign-off stay on one thread. When the work closes, the public risk band can move. Prices never become a resident’s view.</p>
+        </article>
+      </section>
+      <div id="interactive">
+        <p class="muted">Loading demo/data/buildings.json…</p>
+      </div>
+      <footer class="cite">
+        Casualty figures are from the Hong Kong Police announcement of 15 January 2026:
+        <a href="https://www.info.gov.hk/gia/general/202601/15/P2026011500613.htm">168 people confirmed dead</a>
+        after the 26 November 2025 Wang Fuk Court fire, including a firefighter. Sample buildings, quotes, and licences on this site are fictional.
+      </footer>
+    </main>
+    <script type="module" src="./infographic.js"></script>
+  </body>
+</html>

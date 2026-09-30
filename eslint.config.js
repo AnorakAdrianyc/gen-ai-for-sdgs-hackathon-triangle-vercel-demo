@@ -9,6 +9,10 @@ export default ts.config(
     files: ["server/**/*.mjs", "scripts/**/*.mjs", "tests/**/*.mjs", "vite.config.ts"],
     languageOptions: { globals: globals.node },
   },
+  {
+    files: ["demo/**/*.js"],
+    languageOptions: { globals: globals.browser },
+  },
   ...ts.configs.recommended,
   {
     files: ["**/*.{ts,tsx}"],

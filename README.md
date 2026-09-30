@@ -1,5 +1,17 @@
 # Hong Kong 3D Map
 
+## Building safety demo (static, Vercel)
+
+`demo/` is a static building-safety desk: a schematic 3D map of sample buildings coloured by risk band, plus an interactive infographic of a multi-party dispatch network. It reads `demo/data/buildings.json` and does not call a map tile, Lands Department, or other API. Records are illustrative. Wang Fuk Court is context only and is not scored.
+
+```sh
+npm run demo
+```
+
+Open `http://127.0.0.1:4174` for the risk map and `http://127.0.0.1:4174/infographic` for the stakeholder network (`cleanUrls` on Vercel; locally the file is `infographic.html`).
+
+`vercel.json` publishes the `demo/` folder and skips the Vite build. The MapLibre app below is still the local full map and needs network tiles.
+
 A minimal full-window React + TypeScript map, built with Vite, MapLibre GL JS and Tailwind CSS. The default camera looks across Victoria Harbour at a 58° pitch. OpenFreeMap's dark vector style supplies land, coastline, water, roads and labels from OpenStreetMap-compatible data.
 
 ## Run locally

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10161b" />
+    <meta
+      name="description"
+      content="Static demo of a Hong Kong building safety desk: a schematic 3D map coloured by illustrative risk bands, drawn from a local data file."
+    />
+    <title>Hong Kong Building Safety Desk</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%238f3d36' width='16' height='16'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body data-page="desk">
+    <a class="skip" href="#map">Skip to map</a>
+    <header class="top">
+      <div>
+        <p class="mark">Static demo · no API</p>
+        <h1>Hong Kong Building Safety Desk</h1>
+      </div>
+      <nav class="nav" aria-label="Demo">
+        <a href="./index.html" aria-current="page">Risk map</a>
+        <a href="./infographic.html">Stakeholder network</a>
+        <a href="./workflow-flow.html">Repair workflow</a>
+      </nav>
+    </header>
+    <p class="lede">
+      On 26 November 2025 a fire at Wang Fuk Court in Tai Po killed 168 people,
+      including a firefighter, and injured 79. This desk does not score that
+      estate. It shows sample buildings on a schematic 3D map, coloured low,
+      medium, or high from a local data file, so owners’ corporations,
+      managers, and residents can see how a risk picture would be read before a
+      small defect is left alone.
+    </p>
+    <div id="app" class="workspace">
+      <p class="error">Loading demo/data/buildings.json…</p>
+    </div>
+    <script type="module" src="./dashboard.js"></script>
+  </body>
+</html>

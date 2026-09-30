@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10161b" />
+    <meta
+      name="description"
+      content="Plain-language infographic: how a building repair moves from resident report to inspector sign-off, like booking a ride."
+    />
+    <title>Repair workflow · Building Safety Desk</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%238f3d36' width='16' height='16'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body data-page="flow">
+    <a class="skip" href="#flow-chart">Skip to workflow chart</a>
+    <header class="top">
+      <div>
+        <p class="mark">Static demo · no API</p>
+        <h1>How a building repair moves, in plain words</h1>
+      </div>
+      <nav class="nav" aria-label="Demo">
+        <a href="./index.html">Risk map</a>
+        <a href="./infographic.html">Stakeholder network</a>
+        <a href="./workflow-flow.html" aria-current="page">Repair workflow</a>
+      </nav>
+    </header>
+    <main class="page flow-page">
+      <p class="lede" style="padding-left: 0">
+        Think of it like booking a ride. Someone asks, the app checks who they
+        are, a licensed person is matched, and everyone shares one receipt
+        instead of a private chat. The example below follows sample case
+        <strong>NT-441</strong> at <strong>North Terrace Sample</strong> (fictional).
+      </p>
+
+      <div class="flow-toolbar" role="toolbar" aria-label="Highlight a step">
+        <button type="button" class="step" data-flow-step="0" aria-current="step">All steps</button>
+        <button type="button" class="step" data-flow-step="1">1 Report</button>
+        <button type="button" class="step" data-flow-step="2">2 Check</button>
+        <button type="button" class="step" data-flow-step="3">3 Route</button>
+        <button type="button" class="step" data-flow-step="4">4 Pack</button>
+        <button type="button" class="step" data-flow-step="5">5 Match</button>
+        <button type="button" class="step" data-flow-step="6">6 Award</button>
+        <button type="button" class="step" data-flow-step="7">7 Work</button>
+        <button type="button" class="step" data-flow-step="8">8 Sign-off</button>
+        <button type="button" class="step" data-flow-step="9">9 Update</button>
+      </div>
+
+      <section id="flow-chart" class="flow-chart" aria-label="Repair workflow from a resident report to an updated risk band">
+        <div class="flow-start flow-node" data-step="0">
+          <p class="kicker">Starts here</p>
+          <h2>A resident notices a problem</h2>
+          <p>Smoke-stop doors on 12/F do not close.</p>
+        </div>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="1">
+          <span class="flow-num">1</span>
+          <h3>Report</h3>
+          <p class="flow-who">Resident</p>
+          <p>They file it on their own building — like requesting a trip.</p>
+          <p class="flow-uber">Ride: rider requests a car</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node flow-gate" data-step="2">
+          <span class="flow-num">2</span>
+          <h3>Check</h3>
+          <p class="flow-who">Platform</p>
+          <p>Does this account belong to <strong>one flat</strong> in this building?</p>
+          <div class="flow-branches">
+            <p class="flow-no"><strong>No</strong> — stop. The case does not leave the flat.</p>
+            <p class="flow-yes"><strong>Yes</strong> — continue. Identity matches the sample flat on 12/F.</p>
+          </div>
+          <p class="flow-uber">Ride: the app confirms the rider</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="3">
+          <span class="flow-num">3</span>
+          <h3>Route</h3>
+          <p class="flow-who">Owners' corporation</p>
+          <p>The case goes to the building's owners, not a group chat. Case <strong>NT-441</strong> lands on the verified OC.</p>
+          <p class="flow-uber">Ride: the trip is offered to the right account</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="4">
+          <span class="flow-num">4</span>
+          <h3>Pack</h3>
+          <p class="flow-who">Property manager</p>
+          <p>The manager writes the job and when someone can come in — fire-door tender pack and an access window.</p>
+          <p class="flow-uber">Ride: dispatcher sets the pickup</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="5">
+          <span class="flow-num">5</span>
+          <h3>Match</h3>
+          <p class="flow-who">Contractor</p>
+          <p>Licensed contractors are offered the job. Each sees the work, <strong>not</strong> the other person's price.</p>
+          <p class="flow-uber">Ride: a licensed driver is offered the trip</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="6">
+          <span class="flow-num">6</span>
+          <h3>Award</h3>
+          <p class="flow-who">Owners' corporation</p>
+          <p>The owners choose the contractor. The manager alone cannot award the job.</p>
+          <p class="flow-uber">Ride: the account holder confirms the ride</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="7">
+          <span class="flow-num">7</span>
+          <h3>Work</h3>
+          <p class="flow-who">Contractor</p>
+          <p>The contractor does the repair and uploads completion photos onto the same case thread.</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node flow-gate" data-step="8">
+          <span class="flow-num">8</span>
+          <h3>Sign-off</h3>
+          <p class="flow-who">Licensed inspector</p>
+          <p>A checker who is <strong>not</strong> the contractor confirms the doors self-close.</p>
+          <div class="flow-branches">
+            <p class="flow-no"><strong>Not good enough</strong> — back to work.</p>
+            <p class="flow-yes"><strong>Passed</strong> — move to update.</p>
+          </div>
+          <p class="flow-uber">Ride: vehicle inspection after the trip</p>
+        </article>
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <article class="flow-node" data-step="9">
+          <span class="flow-num">9</span>
+          <h3>Update</h3>
+          <p class="flow-who">Resident &amp; authority desk</p>
+          <p>The resident sees the case closed and the building's risk colour on the map. The authority desk sees the official trail. Prices stay hidden from residents.</p>
+          <p class="flow-uber">Ride: both sides see the trip receipt</p>
+        </article>
+      </section>
+
+      <section class="flow-table-wrap" aria-labelledby="flow-table-title">
+        <h2 id="flow-table-title">Step-by-step cheat sheet</h2>
+        <table class="flow-table matrix">
+          <thead>
+            <tr>
+              <th scope="col">Step</th>
+              <th scope="col">In everyday words</th>
+              <th scope="col">Who acts</th>
+              <th scope="col">Like Uber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-flow-row="1">
+              <th scope="row">Report</th>
+              <td>Someone says what is wrong</td>
+              <td>Resident</td>
+              <td>Rider requests a trip</td>
+            </tr>
+            <tr data-flow-row="2">
+              <th scope="row">Check</th>
+              <td>The app confirms they live in that flat</td>
+              <td>Resident / platform</td>
+              <td>Platform confirms the rider</td>
+            </tr>
+            <tr data-flow-row="3">
+              <th scope="row">Route</th>
+              <td>The case goes to the building's owners</td>
+              <td>Owners' corporation</td>
+              <td>Trip offered to the account</td>
+            </tr>
+            <tr data-flow-row="4">
+              <th scope="row">Pack</th>
+              <td>The manager writes the job and access time</td>
+              <td>Property manager</td>
+              <td>Dispatcher sets pickup</td>
+            </tr>
+            <tr data-flow-row="5">
+              <th scope="row">Match</th>
+              <td>Licensed contractors bid without seeing each other's prices</td>
+              <td>Contractor</td>
+              <td>Licensed driver offered the trip</td>
+            </tr>
+            <tr data-flow-row="6">
+              <th scope="row">Award</th>
+              <td>The owners choose the winner</td>
+              <td>Owners' corporation</td>
+              <td>Account holder confirms the ride</td>
+            </tr>
+            <tr data-flow-row="7">
+              <th scope="row">Work</th>
+              <td>Repair happens; photos go on the record</td>
+              <td>Contractor</td>
+              <td>Driver completes the trip</td>
+            </tr>
+            <tr data-flow-row="8">
+              <th scope="row">Sign-off</th>
+              <td>An inspector says the work is done properly</td>
+              <td>Licensed inspector</td>
+              <td>Vehicle check after the trip</td>
+            </tr>
+            <tr data-flow-row="9">
+              <th scope="row">Update</th>
+              <td>Map band can change; audit trail stays</td>
+              <td>Resident &amp; authority</td>
+              <td>Both sides see the receipt</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted">
+          Open the <a href="./infographic.html">stakeholder network</a> to click roles and see who is authenticated at each point, or the <a href="./index.html">risk map</a> for North Terrace Sample.
+        </p>
+      </section>
+
+      <footer class="cite">
+        Wang Fuk Court (26 November 2025) is the motivation for this project, not a scored building on the map.
+        Police confirmed 168 deaths on 15 January 2026:
+        <a href="https://www.info.gov.hk/gia/general/202601/15/P2026011500613.htm">info.gov.hk</a>.
+      </footer>
+    </main>
+    <script type="module" src="./workflow-flow.js"></script>
+  </body>
+</html>

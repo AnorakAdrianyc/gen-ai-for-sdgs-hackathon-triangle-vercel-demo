@@ -1,0 +1,1107 @@
+{
+  "meta": {
+    "dataset": "hk-building-safety-demo",
+    "version": "1.0.0",
+    "updated": "2026-09-30",
+    "disclaimer": "Illustrative sample records for a static demo. Not a Buildings Department assessment, not a survey, and not a statement about any real estate, owners' corporation, or management company.",
+    "motive": {
+      "event": "Wang Fuk Court fire, Tai Po",
+      "date": "2025-11-26",
+      "deaths": 168,
+      "injured": 79,
+      "note": "Wang Fuk Court is not one of the sample buildings and is not given a risk score.",
+      "source": "https://www.info.gov.hk/gia/general/202601/15/P2026011500613.htm"
+    },
+    "howToRead": "The desk loads this file and nothing else. Map blocks use scene.x, scene.y, scene.w, scene.d and scene.floors. Colour uses risk.level. The score panel sums factorPoints and checks it against scoring.bands. The detail panel hides fields the selected role is not listed under in visibility."
+  },
+  "scoring": {
+    "method": "Sum of factor points, clamped conceptually to 0–100.",
+    "factors": [
+      {
+        "id": "age",
+        "label": "Building age",
+        "max": 20
+      },
+      {
+        "id": "inspectionGap",
+        "label": "Years past a statutory inspection window",
+        "max": 25
+      },
+      {
+        "id": "openOrders",
+        "label": "Open statutory orders",
+        "max": 20
+      },
+      {
+        "id": "fireSafety",
+        "label": "Outstanding fire-safety items",
+        "max": 20
+      },
+      {
+        "id": "unverifiedParty",
+        "label": "OC or manager not verified on the network",
+        "max": 15
+      }
+    ],
+    "bands": [
+      { "id": "low", "label": "Low", "min": 0, "max": 39 },
+      { "id": "medium", "label": "Medium", "min": 40, "max": 69 },
+      { "id": "high", "label": "High", "min": 70, "max": 100 }
+    ]
+  },
+  "visibility": {
+    "riskProfile": [
+      "resident",
+      "owners-corporation",
+      "property-manager",
+      "contractor",
+      "inspector",
+      "regulator"
+    ],
+    "defectNarrative": [
+      "resident",
+      "owners-corporation",
+      "property-manager",
+      "inspector",
+      "regulator"
+    ],
+    "statutoryOrders": [
+      "owners-corporation",
+      "property-manager",
+      "inspector",
+      "regulator"
+    ],
+    "tenderQuotes": ["owners-corporation", "property-manager"],
+    "residentContact": ["owners-corporation", "property-manager"],
+    "contractorLicence": [
+      "owners-corporation",
+      "property-manager",
+      "contractor",
+      "inspector",
+      "regulator"
+    ]
+  },
+  "network": {
+    "title": "A dispatch network for building care",
+    "summary": "A building case moves like a trip. A person asks, a verified provider is matched, and the platform keeps one record both sides can trust. Nobody has to hand a stranger the keys to the whole building file.",
+    "record": {
+      "id": "case-record",
+      "name": "Case record",
+      "uberAnalogue": "The trip",
+      "summary": "One thread, one building, one scope of work. Photos, quotes, and sign-offs attach here instead of in a private chat."
+    },
+    "roles": [
+      {
+        "id": "resident",
+        "name": "Resident",
+        "uberAnalogue": "Rider",
+        "authenticatesWith": [
+          "A unit binding for one flat in one building",
+          "An invitation or one-time code from the owners' corporation or manager"
+        ],
+        "canSee": [
+          "Their own reports",
+          "The building risk band",
+          "Public status of cases in that building"
+        ],
+        "canDo": [
+          "File a defect",
+          "Attach photos",
+          "Confirm a time for access"
+        ],
+        "cannot": [
+          "Read other flats' private notes",
+          "See tender prices",
+          "Award a contract"
+        ]
+      },
+      {
+        "id": "owners-corporation",
+        "name": "Owners' corporation",
+        "uberAnalogue": "Account holder",
+        "authenticatesWith": [
+          "OC registration checked against a statutory extract",
+          "Two officers confirm the account"
+        ],
+        "canSee": ["Cases, orders, quotes, and the risk breakdown"],
+        "canDo": [
+          "Accept a case",
+          "Open a tender",
+          "Award a verified contractor"
+        ],
+        "cannot": [
+          "Edit a contractor's licence",
+          "Close a statutory order without the inspector"
+        ]
+      },
+      {
+        "id": "property-manager",
+        "name": "Property manager",
+        "uberAnalogue": "Dispatcher",
+        "authenticatesWith": [
+          "Company registration",
+          "A mandate from the OC for that building"
+        ],
+        "canSee": [
+          "The case thread",
+          "Quotes",
+          "Access notes for open cases"
+        ],
+        "canDo": [
+          "Prepare the tender pack",
+          "Propose a shortlist",
+          "Schedule access"
+        ],
+        "cannot": [
+          "Award the contract unless the OC has delegated it",
+          "Change the public risk band by hand"
+        ]
+      },
+      {
+        "id": "contractor",
+        "name": "Registered contractor",
+        "uberAnalogue": "Driver",
+        "authenticatesWith": [
+          "A registered licence for the trade",
+          "Insurance still in date"
+        ],
+        "canSee": [
+          "Tenders invited to them",
+          "The scope of work",
+          "Not other bidders' prices"
+        ],
+        "canDo": [
+          "Submit one quote",
+          "Update work status",
+          "Upload completion photos"
+        ],
+        "cannot": [
+          "See a resident's access note before access is granted",
+          "Mark a statutory order closed"
+        ]
+      },
+      {
+        "id": "inspector",
+        "name": "Licensed inspector",
+        "uberAnalogue": "Vehicle inspection",
+        "authenticatesWith": [
+          "Authorized Person or registered inspector enrolment"
+        ],
+        "canSee": ["Defects, orders, and the completion record"],
+        "canDo": ["Sign off the work", "Reject the work", "Attach an inspection note"],
+        "cannot": ["See tender prices", "Message residents outside the case"]
+      },
+      {
+        "id": "regulator",
+        "name": "Authority desk",
+        "uberAnalogue": "Trust and safety",
+        "authenticatesWith": ["A staff identity on the authority side"],
+        "canSee": ["Open orders, sign-offs, and the published risk band"],
+        "canDo": [
+          "Read the statutory trail",
+          "Receive a notice when an order stays open"
+        ],
+        "cannot": [
+          "Read private flat complaints that are not statutory",
+          "Pick the winning contractor"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": "resident",
+        "to": "case-record",
+        "label": "Files the case after the unit check"
+      },
+      {
+        "from": "case-record",
+        "to": "owners-corporation",
+        "label": "Routes to the verified OC"
+      },
+      {
+        "from": "owners-corporation",
+        "to": "property-manager",
+        "label": "Asks the manager to prepare the pack"
+      },
+      {
+        "from": "property-manager",
+        "to": "contractor",
+        "label": "Offers the tender to licensed contractors"
+      },
+      {
+        "from": "contractor",
+        "to": "inspector",
+        "label": "Hands finished work to a licensed checker"
+      },
+      {
+        "from": "inspector",
+        "to": "regulator",
+        "label": "Statutory closure becomes visible"
+      },
+      {
+        "from": "regulator",
+        "to": "resident",
+        "label": "The public risk band updates"
+      }
+    ],
+    "journey": [
+      {
+        "id": "report",
+        "title": "Report",
+        "uber": "Rider requests a trip",
+        "actors": ["resident"],
+        "authenticates": "The account is bound to one flat in North Terrace Sample.",
+        "message": "Smoke-stop doors on 12/F do not close.",
+        "record": "Case NT-441 opens on the building thread."
+      },
+      {
+        "id": "check",
+        "title": "Check",
+        "uber": "Platform confirms the rider",
+        "actors": ["resident"],
+        "authenticates": "Unit binding is checked before the case leaves the flat.",
+        "message": "Identity matches Flat sample, 12/F. No other flats are attached.",
+        "record": "The report is marked authenticated."
+      },
+      {
+        "id": "route",
+        "title": "Route",
+        "uber": "Trip is offered, not shouted into a group chat",
+        "actors": ["owners-corporation"],
+        "authenticates": "Two OC officers are already verified for this building.",
+        "message": "North Terrace Sample OC receives case NT-441.",
+        "record": "Status becomes waiting on the OC."
+      },
+      {
+        "id": "pack",
+        "title": "Pack",
+        "uber": "Dispatcher sets the pickup details",
+        "actors": ["property-manager"],
+        "authenticates": "Sample Ridge Management holds a mandate from that OC.",
+        "message": "The manager drafts a fire-door tender pack and an access window.",
+        "record": "Scope, photos, and access note sit on the case."
+      },
+      {
+        "id": "match",
+        "title": "Match",
+        "uber": "A licensed driver is offered the trip",
+        "actors": ["contractor"],
+        "authenticates": "Only licences still in date can see the invitation.",
+        "message": "Two sample contractors submit quotes. Each sees the scope, not the other price.",
+        "record": "Quotes attach to NT-441."
+      },
+      {
+        "id": "award",
+        "title": "Award",
+        "uber": "The account holder confirms the ride",
+        "actors": ["owners-corporation"],
+        "authenticates": "Award needs an OC officer, not the manager alone.",
+        "message": "The OC awards Sample Ridge Contractors.",
+        "record": "The other quote stays hidden from the winner."
+      },
+      {
+        "id": "signoff",
+        "title": "Sign-off",
+        "uber": "The vehicle check, after the trip",
+        "actors": ["inspector"],
+        "authenticates": "A registered inspector, not the contractor, closes the workmanship.",
+        "message": "Doors self-close. The inspector rejects nothing and signs the note.",
+        "record": "Completion photos and the note join the case."
+      },
+      {
+        "id": "update",
+        "title": "Update",
+        "uber": "Both sides see the trip receipt",
+        "actors": ["regulator", "resident"],
+        "authenticates": "The authority desk sees the statutory trail. Residents see the band, not the prices.",
+        "message": "The outstanding fire-door item would drop off the sample score.",
+        "record": "The map band can move. The audit trail stays."
+      }
+    ],
+    "sampleBuildingId": "north-terrace"
+  },
+  "map": {
+    "width": 1000,
+    "height": 720,
+    "land": [
+      {
+        "id": "nt-east",
+        "name": "New Territories",
+        "polygon": [
+          [480, 20],
+          [760, 20],
+          [940, 100],
+          [920, 230],
+          [760, 280],
+          [560, 270],
+          [480, 160]
+        ]
+      },
+      {
+        "id": "nt-west",
+        "name": "Western NT",
+        "polygon": [
+          [20, 70],
+          [360, 40],
+          [430, 140],
+          [400, 300],
+          [260, 360],
+          [80, 300],
+          [20, 180]
+        ]
+      },
+      {
+        "id": "kowloon",
+        "name": "Kowloon",
+        "polygon": [
+          [400, 290],
+          [820, 300],
+          [840, 430],
+          [700, 470],
+          [480, 450],
+          [390, 380]
+        ]
+      },
+      {
+        "id": "island",
+        "name": "Hong Kong Island",
+        "polygon": [
+          [430, 530],
+          [760, 520],
+          [800, 600],
+          [700, 690],
+          [480, 700],
+          [400, 600]
+        ]
+      },
+      {
+        "id": "lantau",
+        "name": "Lantau",
+        "polygon": [
+          [30, 400],
+          [220, 390],
+          [250, 480],
+          [180, 570],
+          [40, 540]
+        ]
+      }
+    ],
+    "labels": [
+      { "text": "New Territories", "x": 700, "y": 90, "kind": "land" },
+      { "text": "Kowloon", "x": 560, "y": 400, "kind": "land" },
+      { "text": "Hong Kong Island", "x": 600, "y": 640, "kind": "land" },
+      { "text": "Lantau", "x": 110, "y": 470, "kind": "land" },
+      { "text": "Victoria Harbour", "x": 390, "y": 490, "kind": "water" }
+    ]
+  },
+  "buildings": [
+    {
+      "id": "north-terrace",
+      "name": "North Terrace Sample",
+      "district": "Tai Po",
+      "region": "New Territories",
+      "yearBuilt": 1981,
+      "units": 812,
+      "coordinates": { "lng": 114.172, "lat": 22.451 },
+      "scene": { "x": 700, "y": 150, "w": 42, "d": 30, "floors": 28 },
+      "ownersCorporation": { "name": "North Terrace Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample Ridge Management" },
+      "risk": { "level": "high", "score": 82 },
+      "factorPoints": {
+        "age": 16,
+        "inspectionGap": 22,
+        "openOrders": 14,
+        "fireSafety": 18,
+        "unverifiedParty": 12
+      },
+      "compliance": {
+        "lastInspection": "2019-04-12",
+        "statutoryWindowClosed": "2022-04-12",
+        "tenderStatus": "open"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-19",
+          "topic": "Fire doors in the common corridor",
+          "issued": "2023-06-01",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Smoke-stop doors on several floors do not self-close.",
+          "reported": "2026-02-02"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 12/F", "channel": "Case thread only" },
+      "tender": {
+        "status": "open",
+        "pack": "Fire-door replacement in common areas",
+        "quotes": [
+          {
+            "contractor": "Sample Ridge Contractors",
+            "licence": "RGBC-SAMPLE-14",
+            "amountHkd": 1280000
+          },
+          {
+            "contractor": "Harbour Sample Engineering",
+            "licence": "RGBC-SAMPLE-22",
+            "amountHkd": 1415000
+          }
+        ]
+      },
+      "caseId": "NT-441"
+    },
+    {
+      "id": "creek-estate",
+      "name": "Creek Estate Sample",
+      "district": "North",
+      "region": "New Territories",
+      "yearBuilt": 1978,
+      "units": 540,
+      "coordinates": { "lng": 114.128, "lat": 22.502 },
+      "scene": { "x": 620, "y": 70, "w": 36, "d": 28, "floors": 22 },
+      "ownersCorporation": { "name": "Creek Estate Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample North Management" },
+      "risk": { "level": "high", "score": 76 },
+      "factorPoints": {
+        "age": 18,
+        "inspectionGap": 20,
+        "openOrders": 16,
+        "fireSafety": 12,
+        "unverifiedParty": 10
+      },
+      "compliance": {
+        "lastInspection": "2018-11-03",
+        "statutoryWindowClosed": "2021-11-03",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-07",
+          "topic": "Common staircase finishes",
+          "issued": "2022-09-14",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Spalled concrete at two staircase landings.",
+          "reported": "2025-12-11"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 6/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "headland",
+      "name": "Headland Sample",
+      "district": "Sai Kung",
+      "region": "New Territories",
+      "yearBuilt": 2008,
+      "units": 320,
+      "coordinates": { "lng": 114.272, "lat": 22.383 },
+      "scene": { "x": 840, "y": 180, "w": 30, "d": 24, "floors": 18 },
+      "ownersCorporation": { "name": "Headland Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample Harbour Management" },
+      "risk": { "level": "low", "score": 8 },
+      "factorPoints": {
+        "age": 4,
+        "inspectionGap": 2,
+        "openOrders": 0,
+        "fireSafety": 2,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2024-08-19",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "none"
+      },
+      "orders": [],
+      "defects": [],
+      "residentContact": { "unit": "Sample flat, 8/F", "channel": "Case thread only" },
+      "tender": { "status": "none", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "valley-block",
+      "name": "Valley Block Sample",
+      "district": "Sha Tin",
+      "region": "New Territories",
+      "yearBuilt": 1992,
+      "units": 610,
+      "coordinates": { "lng": 114.195, "lat": 22.387 },
+      "scene": { "x": 600, "y": 230, "w": 34, "d": 26, "floors": 24 },
+      "ownersCorporation": { "name": "Valley Block Sample OC", "verified": true },
+      "management": { "type": "small-pmc", "name": "Sample Valley Management" },
+      "risk": { "level": "medium", "score": 44 },
+      "factorPoints": {
+        "age": 10,
+        "inspectionGap": 12,
+        "openOrders": 6,
+        "fireSafety": 8,
+        "unverifiedParty": 8
+      },
+      "compliance": {
+        "lastInspection": "2021-05-02",
+        "statutoryWindowClosed": "2024-05-02",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-31",
+          "topic": "Drainage in the podium",
+          "issued": "2025-01-20",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Recurring leaks above the podium shops.",
+          "reported": "2026-01-09"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 15/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "garden-rise",
+      "name": "Garden Rise Sample",
+      "district": "Eastern",
+      "region": "Hong Kong Island",
+      "yearBuilt": 2004,
+      "units": 280,
+      "coordinates": { "lng": 114.2, "lat": 22.291 },
+      "scene": { "x": 710, "y": 560, "w": 28, "d": 22, "floors": 20 },
+      "ownersCorporation": { "name": "Garden Rise Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample Island Management" },
+      "risk": { "level": "low", "score": 14 },
+      "factorPoints": {
+        "age": 6,
+        "inspectionGap": 4,
+        "openOrders": 0,
+        "fireSafety": 4,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2023-10-01",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "none"
+      },
+      "orders": [],
+      "defects": [
+        {
+          "summary": "One exit sign on 3/F is dim. Already logged for replacement.",
+          "reported": "2026-03-01"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 9/F", "channel": "Case thread only" },
+      "tender": { "status": "none", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "peak-annex",
+      "name": "Peak Annex Sample",
+      "district": "Wan Chai",
+      "region": "Hong Kong Island",
+      "yearBuilt": 2012,
+      "units": 96,
+      "coordinates": { "lng": 114.174, "lat": 22.277 },
+      "scene": { "x": 600, "y": 580, "w": 22, "d": 18, "floors": 12 },
+      "ownersCorporation": { "name": "Peak Annex Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample Island Management" },
+      "risk": { "level": "low", "score": 5 },
+      "factorPoints": {
+        "age": 3,
+        "inspectionGap": 0,
+        "openOrders": 0,
+        "fireSafety": 2,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2025-02-14",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "none"
+      },
+      "orders": [],
+      "defects": [],
+      "residentContact": { "unit": "Sample flat, 4/F", "channel": "Case thread only" },
+      "tender": { "status": "none", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "harbour-step",
+      "name": "Harbour Step Sample",
+      "district": "Central and Western",
+      "region": "Hong Kong Island",
+      "yearBuilt": 1988,
+      "units": 240,
+      "coordinates": { "lng": 114.15, "lat": 22.283 },
+      "scene": { "x": 500, "y": 570, "w": 32, "d": 24, "floors": 26 },
+      "ownersCorporation": { "name": "Harbour Step Sample OC", "verified": true },
+      "management": { "type": "small-pmc", "name": "Sample Step Management" },
+      "risk": { "level": "medium", "score": 50 },
+      "factorPoints": {
+        "age": 12,
+        "inspectionGap": 14,
+        "openOrders": 8,
+        "fireSafety": 10,
+        "unverifiedParty": 6
+      },
+      "compliance": {
+        "lastInspection": "2020-07-22",
+        "statutoryWindowClosed": "2023-07-22",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-44",
+          "topic": "External wall tiles",
+          "issued": "2024-11-02",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Loose tiles reported on the north elevation.",
+          "reported": "2025-11-18"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 11/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "south-slope",
+      "name": "South Slope Sample",
+      "district": "Southern",
+      "region": "Hong Kong Island",
+      "yearBuilt": 1976,
+      "units": 188,
+      "coordinates": { "lng": 114.155, "lat": 22.247 },
+      "scene": { "x": 540, "y": 650, "w": 30, "d": 26, "floors": 16 },
+      "ownersCorporation": { "name": "South Slope Sample OC", "verified": false },
+      "management": { "type": "self-managed", "name": "No manager on the sample record" },
+      "risk": { "level": "medium", "score": 46 },
+      "factorPoints": {
+        "age": 16,
+        "inspectionGap": 10,
+        "openOrders": 4,
+        "fireSafety": 8,
+        "unverifiedParty": 8
+      },
+      "compliance": {
+        "lastInspection": "2022-01-09",
+        "statutoryWindowClosed": "2025-01-09",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-12",
+          "topic": "Canopy drainage",
+          "issued": "2025-03-03",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Water stains under the entrance canopy after rain.",
+          "reported": "2026-04-02"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 2/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "east-quay",
+      "name": "East Quay Sample",
+      "district": "Kwun Tong",
+      "region": "Kowloon",
+      "yearBuilt": 1974,
+      "units": 700,
+      "coordinates": { "lng": 114.227, "lat": 22.312 },
+      "scene": { "x": 780, "y": 400, "w": 40, "d": 30, "floors": 25 },
+      "ownersCorporation": { "name": "East Quay Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample Quay Management" },
+      "risk": { "level": "high", "score": 76 },
+      "factorPoints": {
+        "age": 18,
+        "inspectionGap": 18,
+        "openOrders": 12,
+        "fireSafety": 16,
+        "unverifiedParty": 12
+      },
+      "compliance": {
+        "lastInspection": "2017-06-30",
+        "statutoryWindowClosed": "2020-06-30",
+        "tenderStatus": "awarded"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-28",
+          "topic": "Means of escape",
+          "issued": "2023-02-17",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Exit route on the ground floor is used for storage.",
+          "reported": "2025-08-21"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 19/F", "channel": "Case thread only" },
+      "tender": {
+        "status": "awarded",
+        "pack": "Clear and repair the ground-floor exit route",
+        "quotes": [
+          {
+            "contractor": "Sample East Works",
+            "licence": "RGBC-SAMPLE-09",
+            "amountHkd": 960000,
+            "awarded": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "canal-house",
+      "name": "Canal House Sample",
+      "district": "Wong Tai Sin",
+      "region": "Kowloon",
+      "yearBuilt": 1971,
+      "units": 430,
+      "coordinates": { "lng": 114.194, "lat": 22.342 },
+      "scene": { "x": 700, "y": 330, "w": 34, "d": 28, "floors": 18 },
+      "ownersCorporation": { "name": "Canal House Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample Canal Management" },
+      "risk": { "level": "high", "score": 85 },
+      "factorPoints": {
+        "age": 18,
+        "inspectionGap": 22,
+        "openOrders": 16,
+        "fireSafety": 14,
+        "unverifiedParty": 15
+      },
+      "compliance": {
+        "lastInspection": "2016-09-01",
+        "statutoryWindowClosed": "2019-09-01",
+        "tenderStatus": "open"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-03",
+          "topic": "Structural repair of the canopy",
+          "issued": "2021-12-08",
+          "status": "outstanding"
+        },
+        {
+          "id": "SO-SAMPLE-04",
+          "topic": "Fire service installation",
+          "issued": "2024-04-16",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Exposed reinforcement under the entrance canopy.",
+          "reported": "2025-10-05"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 7/F", "channel": "Case thread only" },
+      "tender": {
+        "status": "open",
+        "pack": "Canopy structural repair",
+        "quotes": []
+      }
+    },
+    {
+      "id": "beacon-block",
+      "name": "Beacon Block Sample",
+      "district": "Kowloon City",
+      "region": "Kowloon",
+      "yearBuilt": 1996,
+      "units": 360,
+      "coordinates": { "lng": 114.19, "lat": 22.328 },
+      "scene": { "x": 620, "y": 370, "w": 30, "d": 24, "floors": 21 },
+      "ownersCorporation": { "name": "Beacon Block Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample City Management" },
+      "risk": { "level": "medium", "score": 46 },
+      "factorPoints": {
+        "age": 8,
+        "inspectionGap": 14,
+        "openOrders": 6,
+        "fireSafety": 10,
+        "unverifiedParty": 8
+      },
+      "compliance": {
+        "lastInspection": "2020-12-12",
+        "statutoryWindowClosed": "2023-12-12",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-51",
+          "topic": "Window inspection follow-up",
+          "issued": "2024-06-06",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Several flats still inside an open window-inspection window.",
+          "reported": "2026-01-22"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 10/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "pier-house",
+      "name": "Pier House Sample",
+      "district": "Yau Tsim Mong",
+      "region": "Kowloon",
+      "yearBuilt": 1984,
+      "units": 210,
+      "coordinates": { "lng": 114.17, "lat": 22.3 },
+      "scene": { "x": 530, "y": 360, "w": 26, "d": 22, "floors": 19 },
+      "ownersCorporation": { "name": "Pier House Sample OC", "verified": true },
+      "management": { "type": "small-pmc", "name": "Sample Pier Management" },
+      "risk": { "level": "medium", "score": 50 },
+      "factorPoints": {
+        "age": 14,
+        "inspectionGap": 12,
+        "openOrders": 6,
+        "fireSafety": 10,
+        "unverifiedParty": 8
+      },
+      "compliance": {
+        "lastInspection": "2021-03-18",
+        "statutoryWindowClosed": "2024-03-18",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-60",
+          "topic": "Plumbing riser",
+          "issued": "2025-05-11",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Rust staining on the plumbing riser at the rear stairs.",
+          "reported": "2026-02-27"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 5/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "ridge-court",
+      "name": "Ridge Court Sample",
+      "district": "Sham Shui Po",
+      "region": "Kowloon",
+      "yearBuilt": 1968,
+      "units": 150,
+      "coordinates": { "lng": 114.162, "lat": 22.331 },
+      "scene": { "x": 450, "y": 340, "w": 28, "d": 24, "floors": 12 },
+      "ownersCorporation": { "name": "No OC on the sample record", "verified": false },
+      "management": { "type": "none", "name": "No manager on the sample record" },
+      "risk": { "level": "high", "score": 93 },
+      "factorPoints": {
+        "age": 20,
+        "inspectionGap": 24,
+        "openOrders": 18,
+        "fireSafety": 16,
+        "unverifiedParty": 15
+      },
+      "compliance": {
+        "lastInspection": "2014-02-02",
+        "statutoryWindowClosed": "2017-02-02",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-02",
+          "topic": "Building repair order",
+          "issued": "2019-08-30",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "No verified OC or manager is bound to the building, so the sample orders have nowhere to land.",
+          "reported": "2026-05-01"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 3/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "ferry-point",
+      "name": "Ferry Point Sample",
+      "district": "Tsuen Wan",
+      "region": "New Territories",
+      "yearBuilt": 2001,
+      "units": 480,
+      "coordinates": { "lng": 114.113, "lat": 22.373 },
+      "scene": { "x": 300, "y": 240, "w": 32, "d": 26, "floors": 30 },
+      "ownersCorporation": { "name": "Ferry Point Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample West Management" },
+      "risk": { "level": "low", "score": 13 },
+      "factorPoints": {
+        "age": 6,
+        "inspectionGap": 4,
+        "openOrders": 0,
+        "fireSafety": 3,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2024-01-15",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "closed"
+      },
+      "orders": [],
+      "defects": [],
+      "residentContact": { "unit": "Sample flat, 21/F", "channel": "Case thread only" },
+      "tender": { "status": "closed", "pack": "Lobby lighting, completed in the sample record", "quotes": [] }
+    },
+    {
+      "id": "workshop-row",
+      "name": "Workshop Row Sample",
+      "district": "Kwai Tsing",
+      "region": "New Territories",
+      "yearBuilt": 1986,
+      "units": 260,
+      "coordinates": { "lng": 114.131, "lat": 22.357 },
+      "scene": { "x": 250, "y": 310, "w": 36, "d": 24, "floors": 15 },
+      "ownersCorporation": { "name": "Workshop Row Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample Industrial Management" },
+      "risk": { "level": "medium", "score": 54 },
+      "factorPoints": {
+        "age": 12,
+        "inspectionGap": 16,
+        "openOrders": 8,
+        "fireSafety": 8,
+        "unverifiedParty": 10
+      },
+      "compliance": {
+        "lastInspection": "2019-09-09",
+        "statutoryWindowClosed": "2022-09-09",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-77",
+          "topic": "Fire shutters at the loading bay",
+          "issued": "2024-02-02",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "A fire shutter at the loading bay does not travel fully.",
+          "reported": "2026-03-19"
+        }
+      ],
+      "residentContact": { "unit": "Sample unit, 1/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "market-lane",
+      "name": "Market Lane Sample",
+      "district": "Yuen Long",
+      "region": "New Territories",
+      "yearBuilt": 1990,
+      "units": 390,
+      "coordinates": { "lng": 114.032, "lat": 22.445 },
+      "scene": { "x": 180, "y": 120, "w": 34, "d": 28, "floors": 17 },
+      "ownersCorporation": { "name": "Market Lane Sample OC", "verified": false },
+      "management": { "type": "small-pmc", "name": "Sample Market Management" },
+      "risk": { "level": "medium", "score": 44 },
+      "factorPoints": {
+        "age": 10,
+        "inspectionGap": 12,
+        "openOrders": 6,
+        "fireSafety": 6,
+        "unverifiedParty": 10
+      },
+      "compliance": {
+        "lastInspection": "2021-08-08",
+        "statutoryWindowClosed": "2024-08-08",
+        "tenderStatus": "not-started"
+      },
+      "orders": [
+        {
+          "id": "SO-SAMPLE-18",
+          "topic": "Roof waterproofing",
+          "issued": "2025-06-01",
+          "status": "outstanding"
+        }
+      ],
+      "defects": [
+        {
+          "summary": "Top-floor common lobby smells damp after rain.",
+          "reported": "2026-06-12"
+        }
+      ],
+      "residentContact": { "unit": "Sample flat, 14/F", "channel": "Case thread only" },
+      "tender": { "status": "not-started", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "new-town",
+      "name": "New Town Court Sample",
+      "district": "Tuen Mun",
+      "region": "New Territories",
+      "yearBuilt": 2006,
+      "units": 520,
+      "coordinates": { "lng": 113.977, "lat": 22.391 },
+      "scene": { "x": 120, "y": 200, "w": 36, "d": 28, "floors": 32 },
+      "ownersCorporation": { "name": "New Town Court Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample West Management" },
+      "risk": { "level": "low", "score": 9 },
+      "factorPoints": {
+        "age": 5,
+        "inspectionGap": 2,
+        "openOrders": 0,
+        "fireSafety": 2,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2024-11-11",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "none"
+      },
+      "orders": [],
+      "defects": [],
+      "residentContact": { "unit": "Sample flat, 28/F", "channel": "Case thread only" },
+      "tender": { "status": "none", "pack": null, "quotes": [] }
+    },
+    {
+      "id": "laguna-walk",
+      "name": "Laguna Walk Sample",
+      "district": "Islands",
+      "region": "Lantau",
+      "yearBuilt": 2015,
+      "units": 410,
+      "coordinates": { "lng": 113.948, "lat": 22.289 },
+      "scene": { "x": 140, "y": 470, "w": 34, "d": 26, "floors": 22 },
+      "ownersCorporation": { "name": "Laguna Walk Sample OC", "verified": true },
+      "management": { "type": "pmc", "name": "Sample Island Management" },
+      "risk": { "level": "low", "score": 3 },
+      "factorPoints": {
+        "age": 2,
+        "inspectionGap": 0,
+        "openOrders": 0,
+        "fireSafety": 1,
+        "unverifiedParty": 0
+      },
+      "compliance": {
+        "lastInspection": "2025-06-20",
+        "statutoryWindowClosed": null,
+        "tenderStatus": "none"
+      },
+      "orders": [],
+      "defects": [],
+      "residentContact": { "unit": "Sample flat, 16/F", "channel": "Case thread only" },
+      "tender": { "status": "none", "pack": null, "quotes": [] }
+    }
+  ]
+}
