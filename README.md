@@ -1,5 +1,50 @@
 # Hong Kong 3D Map
 
+## How the idea works
+
+```mermaid
+flowchart LR
+  problem["1. Problem<br/>Repairs stall"]
+  idea["2. Idea<br/>Risk map and a ride-style case"]
+  tech["3. Technology<br/>Map, sample data, Lands identify, Workflow SDK"]
+  solve["4. Result<br/>A defect becomes a tracked repair"]
+  problem --> idea --> tech --> solve
+```
+
+### 1. The problem we want to solve
+
+On 26 November 2025 a fire at Wang Fuk Court in Tai Po killed 168 people, including a firefighter, and injured 79. The wider problem is older stock. Owners' corporations and smaller managers often cannot carry the time and cost of statutory maintenance, tendering, and the legal steps around them. Essential repairs and inspections slip, and the people who live in the building carry the risk. Wang Fuk Court is the reason for the work. It is not given a score in the sample data.
+
+### 2. Our idea
+
+Show each sample building on a schematic 3D map, coloured low, medium, or high, so residents and the people responsible for the building can see the picture before a small defect is left alone. Move a repair the way a ride moves: a resident asks, the account is checked against one flat, a verified contractor is matched, and one case record holds the photos, the quote, and the sign-off. Prices stay with the owners' corporation and the manager.
+
+### 3. What technologies are needed
+
+| Piece | What it does |
+| --- | --- |
+| Static demo in `demo/` | Risk map, stakeholder network, and repair steps, drawn from `demo/data/buildings.json`. No live API. |
+| MapLibre map in `src/` | The full Hong Kong harbour map and basic 3D buildings. |
+| `/api/lands/identify` | Turns a click into an HK80 query for the Lands Department Identify service. |
+| Workflow SDK (`workflow`, Nitro) | Runs the repair as durable steps. Each step can retry. The run can resume after a crash. |
+| `POST /api/repair-case` | Starts that workflow for a sample building. The default building is `north-terrace`, case NT-441. |
+
+### 4. How this idea solves the problem
+
+The map makes an overdue building visible. The case network stops the work living in a private chat. The durable workflow is the same sequence the infographic walks through: load the sample record, check the unit binding, route it to the owners, prepare the tender, match licensed contractors, award or hold the job, then publish the risk band. A failed step retries. The earlier steps are not done again from scratch.
+
+```mermaid
+flowchart TD
+  report["Resident reports a defect"]
+  check["Check the flat binding"]
+  route["Route to the owners' corporation"]
+  pack["Manager prepares the tender"]
+  match["Match licensed contractors"]
+  award["Owners award or hold"]
+  update["Publish the risk band"]
+  report --> check --> route --> pack --> match --> award --> update
+```
+
 ## Building safety demo (static, Vercel)
 
 `demo/` is a static building-safety desk: a schematic 3D map of sample buildings coloured by risk band, plus an interactive infographic of a multi-party dispatch network. It reads `demo/data/buildings.json` and does not call a map tile, Lands Department, or other API. Records are illustrative. Wang Fuk Court is context only and is not scored.
@@ -23,7 +68,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. The default OpenStreetMap buildings and Identify work without a key. The official 3D Spatial Data mode requires `LANDSD_API_KEY` in `.env.local`. Internet access is required for public vector tiles, styles, fonts and sprites; this is not an offline map. WebGL must be enabled.
+Open the local URL printed by Vite. The default OpenStreetMap buildings and Identify work without a key. `POST /api/repair-case` with `{ "buildingId": "north-terrace" }` starts the durable repair workflow. The official 3D Spatial Data mode requires `LANDSD_API_KEY` in `.env.local`. Internet access is required for public vector tiles, styles, fonts and sprites; this is not an offline map. WebGL must be enabled.
 
 ```sh
 npm run build    # TypeScript check and production build

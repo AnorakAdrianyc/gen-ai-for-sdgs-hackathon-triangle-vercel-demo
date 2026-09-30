@@ -1,7 +1,10 @@
 node_modules
 dist
+.output
+.vercel
 .env
 .env.local
 *.tsbuildinfo
 
 public/codecs/
+/.swc
