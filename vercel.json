@@ -1,8 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "",
-  "buildCommand": "",
-  "outputDirectory": "demo",
-  "cleanUrls": true
+  "framework": "vite",
+  "buildCommand": "npm run build && rm -rf dist/demo && cp -a demo dist/demo",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demo", "destination": "/demo/index.html" },
+    { "source": "/demo/", "destination": "/demo/index.html" }
+  ]
 }

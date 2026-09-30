@@ -8,9 +8,9 @@
 npm run demo
 ```
 
-Open `http://127.0.0.1:4174` for the risk map and `http://127.0.0.1:4174/infographic` for the stakeholder network (`cleanUrls` on Vercel; locally the file is `infographic.html`).
+Open `http://127.0.0.1:4174` for the risk map and `http://127.0.0.1:4174/infographic.html` for the stakeholder network. On Vercel the same pages are under `/demo`.
 
-`vercel.json` publishes the `demo/` folder and skips the Vite build. The MapLibre app below is still the local full map and needs network tiles.
+The MapLibre app is the site root. Identify calls `/api/lands/identify`, which Vercel serves as a function and local `npm run dev` / `npm start` serve from `server/lands.mjs`. A host with neither of those returns 404 for a location query.
 
 A minimal full-window React + TypeScript map, built with Vite, MapLibre GL JS and Tailwind CSS. The default camera looks across Victoria Harbour at a 58° pitch. OpenFreeMap's dark vector style supplies land, coastline, water, roads and labels from OpenStreetMap-compatible data.
 

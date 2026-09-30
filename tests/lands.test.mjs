@@ -2,7 +2,42 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { once } from "node:events";
-import { createLandsMiddleware } from "../server/lands.mjs";
+import { createLandsMiddleware, identifyUpstreamUrl } from "../server/lands.mjs";
+import { GET as identifyGet } from "../api/lands/identify.js";
+
+test("identify route accepts the reported Kowloon point and rejects a bad one", async () => {
+  assert.equal(identifyUpstreamUrl(0, 0), null);
+  const upstream = identifyUpstreamUrl(837664.169, 820990.98);
+  assert.equal(upstream.hostname, "www.map.gov.hk");
+  assert.equal(upstream.searchParams.get("x"), "837664.169");
+  assert.equal(upstream.searchParams.get("y"), "820990.98");
+
+  const originalFetch = globalThis.fetch;
+  let seen = "";
+  globalThis.fetch = async (url) => {
+    seen = String(url);
+    return new Response(JSON.stringify({ results: [] }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  };
+  try {
+    const response = await identifyGet(
+      new Request(
+        "https://example.test/api/lands/identify?x=837664.169&y=820990.980",
+      ),
+    );
+    assert.equal(response.status, 200);
+    assert.match(seen, /\/gs\/api\/v1\.0\.0\/identify\?/);
+    assert.equal(await response.json().then((body) => Array.isArray(body.results)), true);
+    const rejected = await identifyGet(
+      new Request("https://example.test/api/lands/identify?x=1&y=2"),
+    );
+    assert.equal(rejected.status, 400);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
 
 test("proxy rejects invalid coordinates, unlisted paths, writes and missing keys", async () => {
   const middleware = createLandsMiddleware({});

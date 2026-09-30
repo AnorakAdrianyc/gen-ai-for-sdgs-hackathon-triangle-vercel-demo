@@ -6,7 +6,7 @@ export default ts.config(
   { ignores: ["dist", "public/codecs"] },
   js.configs.recommended,
   {
-    files: ["server/**/*.mjs", "scripts/**/*.mjs", "tests/**/*.mjs", "vite.config.ts"],
+    files: ["server/**/*.mjs", "api/**/*.js", "scripts/**/*.mjs", "tests/**/*.mjs", "vite.config.ts"],
     languageOptions: { globals: globals.node },
   },
   {

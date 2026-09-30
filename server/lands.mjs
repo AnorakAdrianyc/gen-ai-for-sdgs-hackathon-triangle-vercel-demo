@@ -1,6 +1,24 @@
 import { Readable } from "node:stream";
 import { TileCache } from "./tile-cache.mjs";
 
+export function identifyUpstreamUrl(x, y) {
+  if (
+    !Number.isFinite(x) ||
+    !Number.isFinite(y) ||
+    x < 780000 ||
+    x > 880000 ||
+    y < 790000 ||
+    y > 860000
+  ) {
+    return null;
+  }
+  const upstream = new URL("https://www.map.gov.hk/gs/api/v1.0.0/identify");
+  upstream.searchParams.set("x", String(x));
+  upstream.searchParams.set("y", String(y));
+  upstream.searchParams.set("lang", "zh");
+  return upstream;
+}
+
 export function createLandsMiddleware(env) {
   const cache = new TileCache();
   return async (req, res, next) => {
@@ -13,27 +31,14 @@ export function createLandsMiddleware(env) {
     let upstream;
     let cacheKey;
     if (url.pathname === "/api/lands/identify") {
-      const x = Number(url.searchParams.get("x"));
-      const y = Number(url.searchParams.get("y"));
-      if (
-        !url.searchParams.has("x") ||
-        !url.searchParams.has("y") ||
-        !Number.isFinite(x) ||
-        !Number.isFinite(y) ||
-        x < 780000 ||
-        x > 880000 ||
-        y < 790000 ||
-        y > 860000
-      ) {
+      upstream = identifyUpstreamUrl(
+        Number(url.searchParams.get("x")),
+        Number(url.searchParams.get("y")),
+      );
+      if (!upstream) {
         res.writeHead(400).end("Invalid HK80 coordinates");
         return;
       }
-      upstream = new URL("https://www.map.gov.hk/gs/api/v1.0.0/identify");
-      upstream.search = new URLSearchParams({
-        x: String(x),
-        y: String(y),
-        lang: "zh",
-      }).toString();
     } else if (url.pathname.startsWith("/api/lands/3d/")) {
       const path = url.pathname.slice("/api/lands/3d/".length);
       if (
