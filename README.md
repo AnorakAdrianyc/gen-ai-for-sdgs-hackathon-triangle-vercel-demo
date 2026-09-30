@@ -38,7 +38,7 @@ The default style is `https://tiles.openfreemap.org/styles/dark`; no token is ne
 
 ## Building heights
 
-The extrusion layer uses the provider's `render_height` and `render_min_height` values directly, without exaggeration or generated skyscrapers. Missing or nonnumeric heights resolve to zero, leaving those footprints flat. OpenMapTiles can derive render heights from OSM levels or provider defaults when surveyed heights are unavailable, so these values are source-based, not a guarantee of surveyed accuracy. Coverage varies by location and zoom. Buildings appear from zoom 13, below text labels. This view uses a flat ground plane; terrain elevation is outside the scope of this version.
+The extrusion layer uses the provider's `render_height` and `render_min_height` values directly, without exaggeration or generated skyscrapers. Missing or nonnumeric heights resolve to zero, leaving those footprints flat. OpenMapTiles can derive render heights from OSM levels or provider defaults when surveyed heights are unavailable, so these values are source-based, not a guarantee of surveyed accuracy. Coverage varies by location and zoom. Buildings appear from zoom 13, below text labels. The basic mode uses a flat ground plane. Spatial mode adds elevation terrain at its true scale.
 
 ## Structure
 
@@ -82,9 +82,13 @@ Key 僅由 `server/lands.mjs` 加入官方請求，不會編入前端或傳給�
 | 基建     | `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/infrastructure/tileset.json`  |
 | Identify | `https://www.map.gov.hk/gs/api/v1.0.0/identify?x={HK80_X}&y={HK80_Y}&lang=zh` |
 
-3D 模型使用 deck.gl 在 MapLibre 上疊加顯示。為控制記憶體和下載量，預設仍為基本建築，官方模式按視野逐步載入，採 2 px 畫面誤差門檻、每組模型 256 MB 快取預算與最多 3 個並行請求；首次載入可需數十秒。模型涵蓋範圍、更新時間與幾何精度依官方來源。記憶體壓力升高時可降低細節，以免無限制載入。建築改用淺藍灰建築示意材質，以實際面的法線計算方向光，強化牆面、屋頂與轉角的對比；不更改模型幾何和高度。遠處仍會使用簡化模型，原始資料中的形狀誤差不會因此自動修復。實景模式已移除。
+3D 模型使用 deck.gl 在 MapLibre 上疊加顯示。為控制記憶體和下載量，預設仍為基本建築，官方模式按視野逐步載入，採 4 px 畫面誤差門檻、每組模型 256 MB 快取預算與最多 8 個並行請求；首次載入可需數十秒。模型涵蓋範圍、更新時間與幾何精度依官方來源。記憶體壓力升高時可降低細節，以免無限制載入。建築改用淺藍灰建築示意材質，以實際面的法線計算方向光，強化牆面、屋頂與轉角的對比；不更改模型幾何和高度。遠處仍會使用簡化模型，原始資料中的形狀誤差不會因此自動修復。實景模式已移除。
 
-Basis 材質解碼器在 `predev`／`prebuild` 由已安裝的 npm 套件複製到 `public/codecs/`，隨站點提供，無需瀏覽器向第三方 CDN 下載解碼器。
+Spatial 模式使用統一材質，因此停用 glTF 圖像下載／解碼，並在 GPU 上傳前移除不用的貼圖引用。嵌入模型二進位檔案的圖像位元組仍會隨模型下載，但不再執行 Basis/KTX2 貼圖解碼。保留實際頂點、索引、高度與模型位置。
+
+伺服器對完整成功的 3D 回應提供 128 MB 記憶體 LRU 快取（單檔最多 16 MB、1 小時期限），並保留版本參數。大型檔案仍串流回傳，不加入快取；取消／失敗的回應不快取。`X-Lands-Cache: HIT/MISS` 可用於診斷，伺服器重啟會清空快取。瀏覽器也保留 1 小時的 HTTP 快取。
+
+模型狀態區分已顯示與目前視野已補齊。開發模式 Console 的 `Spatial view settled in …` 記錄目前視野載入完成的時間（包含約 1 秒穩定觀察期），不能視為所有區域的效能保證。
 
 ### 新增模組與驗證
 
@@ -99,3 +103,13 @@ Basis 材質解碼器在 `predev`／`prebuild` 由已安裝的 npm 套件複製�
 完整擴充資料來源清單見 [香港地圖 API 清單](docs/HONG_KONG_APIS.zh-Hant.md)。
 
 官方說明：[3D Spatial Data](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-spatial-data-api)、[Identify](https://portal.csdi.gov.hk/csdi-webpage/apidoc/IdentifyAPI)。
+
+## 山體與建築高度
+
+Spatial 模式啟用 MapLibre `raster-dem` Terrarium 地形及 hillshade，倍率固定為 1。道路、地名和地表會貼合地形；官方建築與基建仍使用原有絕對高度，不額外加一次地面高度。deck.gl 與 MapLibre 共用 WebGL 深度，以處理山體與建築的前後遮擋。切回基本模式會關閉地形。
+
+高程來源：[Mapzen Terrain Tiles / AWS](https://registry.opendata.aws/terrain-tiles/)，香港使用全球 DEM 覆蓋，無需 API key；可用 `VITE_TERRAIN_URL` 更換相同 Terrarium 編碼的來源（256 px、最高 zoom 14）。[來源與 attribution](https://github.com/tilezen/joerd/blob/master/docs/attribution.md) 包括 USGS / NOAA，亦顯示於地圖。
+
+DEM 不是地政總署的精細地盤地形，來源解析度、年代及垂直基準可能與建築資料有差別。山坡整體會呈現，但個別地台、擋土牆、山路與建築底座仍可能有局部間隙／穿插；不以任意移動整幢建築掩蓋差異。若需要精確接地，下一步需換入官方精細 DTM 並確認高程基準。
+
+`src/map/deckCompatibility.ts` 隔離了 deck.gl 9.4 對舊 MapLibre `transform` 路徑的相容處理，讀取 MapLibre 6 的即時渲染相機。已固定 MapLibre 6.11.2；升級任一渲染套件時需重新驗證山區平移、縮放和模式切換。

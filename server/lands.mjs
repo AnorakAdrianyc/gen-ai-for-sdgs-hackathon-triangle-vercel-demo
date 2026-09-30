@@ -1,6 +1,8 @@
 import { Readable } from "node:stream";
+import { TileCache } from "./tile-cache.mjs";
 
 export function createLandsMiddleware(env) {
+  const cache = new TileCache();
   return async (req, res, next) => {
     const url = new URL(req.url || "/", "http://localhost");
     if (!url.pathname.startsWith("/api/lands/")) return next();
@@ -9,6 +11,7 @@ export function createLandsMiddleware(env) {
       return;
     }
     let upstream;
+    let cacheKey;
     if (url.pathname === "/api/lands/identify") {
       const x = Number(url.searchParams.get("x"));
       const y = Number(url.searchParams.get("y"));
@@ -46,6 +49,24 @@ export function createLandsMiddleware(env) {
       }
       upstream = new URL(path, "https://data.map.gov.hk/api/3d-data/");
       upstream.searchParams.set("key", env.LANDSD_API_KEY);
+      const version = url.searchParams.get("v") || "";
+      if (!/^[a-zA-Z0-9._-]{0,64}$/.test(version)) {
+        res.writeHead(400).end("Invalid version");
+        return;
+      }
+      if (version) upstream.searchParams.set("v", version);
+      cacheKey = `${path}?v=${version}`;
+      const cached = cache.get(cacheKey);
+      if (cached) {
+        res
+          .writeHead(200, {
+            "Content-Type": cached.contentType,
+            "Cache-Control": "public, max-age=3600",
+            "X-Lands-Cache": "HIT",
+          })
+          .end(cached.body);
+        return;
+      }
     } else {
       res.writeHead(404).end();
       return;
@@ -66,15 +87,30 @@ export function createLandsMiddleware(env) {
           .end(`Lands Department service returned ${response.status}`);
         return;
       }
+      const contentType =
+        response.headers.get("content-type") || "application/octet-stream";
       res.writeHead(200, {
-        "Content-Type":
-          response.headers.get("content-type") || "application/octet-stream",
+        "X-Lands-Cache": "MISS",
+        "Content-Type": contentType,
         "Cache-Control": url.pathname.includes("/3d/")
           ? "public, max-age=3600"
           : "public, max-age=60",
       });
       if (response.body) {
         const body = Readable.fromWeb(response.body);
+        if (cacheKey) {
+          let chunks = [];
+          let size = 0;
+          body.on("data", (chunk) => {
+            size += chunk.length;
+            if (size <= cache.maxEntryBytes) chunks.push(chunk);
+            else chunks = [];
+          });
+          body.once("end", () => {
+            if (size <= cache.maxEntryBytes && !controller.signal.aborted)
+              cache.set(cacheKey, Buffer.concat(chunks), contentType);
+          });
+        }
         body.on("error", () => res.destroy());
         body.pipe(res);
         await new Promise((resolve) => {

@@ -110,6 +110,7 @@ export function HongKongMap() {
         maxZoom: 20,
         maxPitch: 75,
         canvasContextAttributes: { antialias: true },
+        pixelRatio: Math.min(window.devicePixelRatio, 2),
       });
     } catch {
       setLoading(false);

@@ -32,3 +32,37 @@ test("proxy rejects invalid coordinates, unlisted paths, writes and missing keys
     await new Promise((resolve) => server.close(resolve));
   }
 });
+
+test("proxy caches complete tiles, preserves versions, and never exposes the key", async (t) => {
+  const originalFetch = globalThis.fetch;
+  let upstreamCalls = 0;
+  t.mock.method(globalThis, "fetch", async (url, options) => {
+    const target = new URL(url);
+    if (target.hostname !== "data.map.gov.hk")
+      return originalFetch(url, options);
+    upstreamCalls++;
+    assert.equal(target.searchParams.get("key"), "test-secret");
+    assert.equal(target.searchParams.get("v"), "1.2.3");
+    return new Response('{"root":{}}', {
+      headers: { "content-type": "application/json" },
+    });
+  });
+  const middleware = createLandsMiddleware({ LANDSD_API_KEY: "test-secret" });
+  const server = createServer(
+    (req, res) => void middleware(req, res, () => res.writeHead(404).end()),
+  );
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  try {
+    const url = `http://127.0.0.1:${server.address().port}/api/lands/3d/3dsd/WGS84/building/tileset.json?v=1.2.3`;
+    for (const expected of ["MISS", "HIT"]) {
+      const response = await originalFetch(url);
+      assert.equal(response.headers.get("x-lands-cache"), expected);
+      assert.equal((await response.text()).includes("test-secret"), false);
+    }
+    assert.equal(upstreamCalls, 1);
+  } finally {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
