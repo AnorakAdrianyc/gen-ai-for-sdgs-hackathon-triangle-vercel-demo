@@ -1,5 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "gen-ai-for-sdgs-hackathon-triang-git-c6a7b6-adrian-s-projects26.vercel.app"
+        }
+      ],
+      "destination": "https://northwind-cross-platform-bridging-m.vercel.app/",
+      "permanent": true
+    }
+  ]
 }
